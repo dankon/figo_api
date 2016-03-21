@@ -9,17 +9,17 @@
     <table border="1" width="100%">
         <tr>
             <th>Logo</th>
-            <th>Account ID</th>
-            <th>Account Number</th>
-            <th>Bank name / ID</th>
-            <th>Balance</th>
+            <th ng-click="orderByMe('account_id')">Account ID</th>
+            <th ng-click="orderByMe('account_number')">Account Number</th>
+            <th ng-click="orderByMe('bank_name')">Bank name / ID</th>
+            <th ng-click="orderByMe('balance.balance')">Balance</th>
         </tr>
-        <tr ng-repeat="account in accounts['accounts']">
-            <td><img src={{account['additional_icons']['48x48']}}></td>
-            <td>{{account['account_id']}}</td>
-            <td>{{account['account_number']}}</td>
-            <td>{{account['bank_name']}} / {{account['bank_id']}}</td>
-            <td>{{account['balance']['balance'] | currency : account['currency']}}</td>
+        <tr ng-repeat="account in accounts.accounts | orderBy : myOrderBy">
+            <td><img src={{account.additional_icons['48x48']}}></td>
+            <td>{{account.account_id}}</td>
+            <td>{{account.account_number}}</td>
+            <td>{{account.bank_name}} / {{account.bank_id}}</td>
+            <td>{{account.balance.balance | currency : account.currency}}</td>
         </tr>
     </table>
 </div>
@@ -34,7 +34,10 @@ app.controller('apiCtrl', function($scope, $http){
     });
     $http.get(url_accounts, {headers : headers}).then(function(response){
         $scope.accounts = response.data;
-    });    
+    });  
+    $scope.orderByMe = function(what_ord){
+        $scope.myOrderBy = what_ord;
+    };
 });
 </script>
 
