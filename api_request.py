@@ -55,7 +55,10 @@ print req_response['access_token']
 access_headers = {'Authorization': "%s %s" % (req_response['token_type'], req_response['access_token']), 
                   'Accept': 'application/json', 
                   'Content-Type': 'application/json'}
-                  
+
+with open('auth_token.js', 'w') as tok_file:
+    tok_file.write('var headers = ' + json.dumps(access_headers) + ';')
+"""\
 user_req = requests.get('%s/rest/user' % MAIN_URL, headers=access_headers)
 print user_req.text
 
@@ -69,7 +72,7 @@ print accounts_req.text
 
 #GET /rest/accounts/<account_id>/transactions/<transaction_id>
 #GET /rest/transactions/<transaction_id>
-
+"""
 
 
 
