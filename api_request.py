@@ -6,6 +6,7 @@ Module for provide some API action
 import re
 import webbrowser
 import base64
+import json
 
 import requests
 
@@ -40,8 +41,35 @@ POST_AUTH_TOKEN_URL = ("https://api.figo.me/auth/token")
 AUTH_TOKEN_PARAMS = {'grant_type' : 'authorization_code',
                      'code' : code}
 auth_headers = {'Authorization': "Basic %s" % base64.b64encode(demo_client_id + ":" + demo_client_secret),
-                'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'} 
+                'Accept': 'application/json', 
+                'Content-Type': 'application/x-www-form-urlencoded'} 
                      
 auth_token_req = requests.post(POST_AUTH_TOKEN_URL, data=AUTH_TOKEN_PARAMS, headers=auth_headers)
 
 print auth_token_req.text
+
+req_response = json.loads(auth_token_req.text)
+
+print req_response['access_token']
+
+access_headers = {'Authorization': "%s %s" % (req_response['token_type'], req_response['access_token']), 
+                  'Accept': 'application/json', 
+                  'Content-Type': 'application/json'}
+                  
+user_req = requests.get('%s/rest/user' % MAIN_URL, headers=access_headers)
+print user_req.text
+
+#GET /rest/accounts/<account_id>
+accounts_req = requests.get('%s/rest/accounts' % MAIN_URL, headers=access_headers)
+print accounts_req.text
+
+#GET /rest/accounts/<account_id>/balance
+
+#GET /rest/banks/<bank_id>
+
+#GET /rest/accounts/<account_id>/transactions/<transaction_id>
+#GET /rest/transactions/<transaction_id>
+
+
+
+
