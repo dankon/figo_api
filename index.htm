@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<div ng-app="apiApp" ng-controller="apiCtrl">
+    <p>Login: {{user.name}}</p>
+    <p>Email: {{user.email}}</p>
+    <table border="1" width="100%">
+        <tr>
+            <th>Logo</th>
+            <th>Account ID</th>
+            <th>Account Number</th>
+            <th>Bank name / ID</th>
+            <th>Balance</th>
+        </tr>
+        <tr ng-repeat="account in accounts['accounts']">
+            <td><img src={{account['additional_icons']['48x48']}}></td>
+            <td>{{account['account_id']}}</td>
+            <td>{{account['account_number']}}</td>
+            <td>{{account['bank_name']}} / {{account['bank_id']}}</td>
+            <td>{{account['balance']['balance'] | currency : account['currency']}}</td>
+        </tr>
+    </table>
+</div>
+
+<script src="auth_token.js"></script>
+<script src="api_urls.js"></script>
+<script>
+var app = angular.module('apiApp', []);
+app.controller('apiCtrl', function($scope, $http){
+    $http.get(url_user, {headers : headers}).then(function(response){
+        $scope.user = response.data;
+    });
+    $http.get(url_accounts, {headers : headers}).then(function(response){
+        $scope.accounts = response.data;
+    });    
+});
+</script>
+
+</body>
+</html>
